@@ -1,0 +1,87 @@
+﻿<Window x:Class="VpnIpTable.UI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:VpnIpTable.UI"
+        mc:Ignorable="d"
+        Title="VPN IP Table Manager" Height="600" Width="900">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <!-- Input Section -->
+        <GroupBox Header="Ввод CIDR адресов" Grid.Row="0" Margin="0,0,0,10">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBox x:Name="InputTextBox" 
+                         Grid.Row="0"
+                         AcceptsReturn="True"
+                         TextWrapping="Wrap"
+                         VerticalScrollBarVisibility="Auto"
+                         Height="100"
+                         Margin="5"/>
+                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button x:Name="LoadFromFileButton" 
+                            Content="Загрузить из файла" 
+                            Width="150"
+                            Height="30"
+                            Margin="5"
+                            Click="LoadFromFileButton_Click"/>
+                    <Button x:Name="AddButton" 
+                            Content="Добавить" 
+                            Width="100"
+                            Height="30"
+                            Margin="5"
+                            Click="AddButton_Click"/>
+                </StackPanel>
+            </Grid>
+        </GroupBox>
+        
+        <!-- List Section -->
+        <GroupBox Header="Список адресов" Grid.Row="1" Margin="0,0,0,10">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <ListBox x:Name="AddressListBox" 
+                         Grid.Row="0"
+                         Margin="5"
+                         SelectionMode="Single"/>
+                <Button x:Name="RemoveButton" 
+                        Content="Удалить выбранный" 
+                        Grid.Row="1"
+                        HorizontalAlignment="Right"
+                        Width="150"
+                        Height="30"
+                        Margin="5"
+                        Click="RemoveButton_Click"/>
+            </Grid>
+        </GroupBox>
+        
+        <!-- Export Section -->
+        <GroupBox Header="Экспорт" Grid.Row="2">
+            <StackPanel Orientation="Horizontal">
+                <Button x:Name="ExportCsvButton" 
+                        Content="Экспорт (CSV)" 
+                        Width="120"
+                        Height="30"
+                        Margin="5"
+                        Click="ExportCsvButton_Click"/>
+                <Button x:Name="ExportRouteButton" 
+                        Content="Экспорт (Route)" 
+                        Width="120"
+                        Height="30"
+                        Margin="5"
+                        Click="ExportRouteButton_Click"/>
+            </StackPanel>
+        </GroupBox>
+    </Grid>
+</Window>

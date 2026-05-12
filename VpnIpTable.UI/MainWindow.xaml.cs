@@ -65,7 +65,7 @@ public partial class MainWindow : Window
         var openDialog = new OpenFileDialog
         {
             Title = "Загрузить текст из файла",
-            Filter = "Text Files|*.txt|All Files|*.*"
+            Filter = "Supported Files|*.txt;*.json;*.csv|Text Files|*.txt|JSON Files|*.json|All Files|*.*"
         };
 
         if (openDialog.ShowDialog() == true)
@@ -73,7 +73,10 @@ public partial class MainWindow : Window
             try
             {
                 var fileContent = File.ReadAllText(openDialog.FileName);
-                InputTextBox.Text = fileContent;
+                var addresses = GetAddressesFromFileContent(fileContent, Path.GetExtension(openDialog.FileName));
+                InputTextBox.Text = addresses.Any()
+                    ? string.Join(Environment.NewLine, addresses)
+                    : fileContent;
             }
             catch (Exception ex)
             {
@@ -128,6 +131,18 @@ public partial class MainWindow : Window
         ShowExportDialog(routeCommands, "Экспорт Route команд", "Bat Files|*.bat|All Files|*.*");
     }
 
+    private void ExportJsonButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (!_ranges.Any())
+        {
+            MessageBox.Show("Список адресов пуст.", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+
+        var json = _cidrService.ExportToAmneziaJson(_ranges);
+        ShowExportDialog(json, "Экспорт JSON", "JSON Files|*.json|All Files|*.*");
+    }
+
     private void SaveData()
     {
         try
@@ -168,7 +183,7 @@ public partial class MainWindow : Window
         {
             Title = title,
             Filter = filter,
-            FileName = title.Contains("CSV") ? "addresses.csv" : "route_commands.bat"
+            FileName = GetExportFileName(title)
         };
 
         if (saveDialog.ShowDialog() == true)
@@ -176,5 +191,26 @@ public partial class MainWindow : Window
             File.WriteAllText(saveDialog.FileName, content);
             MessageBox.Show($"Файл сохранен: {saveDialog.FileName}", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
         }
+    }
+
+    private static string GetExportFileName(string title)
+    {
+        if (title.Contains("CSV"))
+            return "addresses.csv";
+
+        if (title.Contains("JSON"))
+            return "amnezia_sites.json";
+
+        return "route_commands.bat";
+    }
+
+    private List<string> GetAddressesFromFileContent(string fileContent, string extension)
+    {
+        if (string.Equals(extension, ".json", StringComparison.OrdinalIgnoreCase))
+        {
+            return _cidrService.ExtractAddressesFromAmneziaJson(fileContent);
+        }
+
+        return _cidrService.ExtractAddressesFromText(fileContent);
     }
 }

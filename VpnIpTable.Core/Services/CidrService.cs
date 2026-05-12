@@ -1,4 +1,5 @@
 using System.Net;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using VpnIpTable.Core.Models;
 
@@ -125,6 +126,69 @@ public class CidrService
     }
 
     /// <summary>
+    /// Экспортирует список диапазонов в JSON-формат, совместимый с Amnezia
+    /// </summary>
+    public string ExportToAmneziaJson(List<IpRange> ranges)
+    {
+        var items = ranges.Select(r =>
+        {
+            var cidr = r.ToString();
+            return new
+            {
+                hostname = cidr,
+                ip = cidr
+            };
+        });
+
+        return JsonSerializer.Serialize(items, new JsonSerializerOptions
+        {
+            WriteIndented = true
+        });
+    }
+
+    /// <summary>
+    /// Извлекает IP-адреса и CIDR из JSON-формата Amnezia.
+    /// Если поле ip заполнено, используется оно.
+    /// Если поле ip пустое, используется hostname, но только если в нем валидный IP или CIDR.
+    /// </summary>
+    public List<string> ExtractAddressesFromAmneziaJson(string json)
+    {
+        if (string.IsNullOrWhiteSpace(json))
+            return new List<string>();
+
+        using var document = JsonDocument.Parse(json);
+        if (document.RootElement.ValueKind != JsonValueKind.Array)
+            return new List<string>();
+
+        var addresses = new List<string>();
+
+        foreach (var item in document.RootElement.EnumerateArray())
+        {
+            if (item.ValueKind != JsonValueKind.Object)
+                continue;
+
+            var ip = GetJsonString(item, "ip");
+            if (!string.IsNullOrWhiteSpace(ip))
+            {
+                if (IsValidCidr(ip))
+                {
+                    addresses.Add(ip.Trim());
+                }
+
+                continue;
+            }
+
+            var hostname = GetJsonString(item, "hostname");
+            if (!string.IsNullOrWhiteSpace(hostname) && IsValidCidr(hostname))
+            {
+                addresses.Add(hostname.Trim());
+            }
+        }
+
+        return addresses.Distinct().ToList();
+    }
+
+    /// <summary>
     /// Валидирует строку CIDR
     /// </summary>
     public bool IsValidCidr(string cidr)
@@ -166,5 +230,15 @@ public class CidrService
         }
 
         return addresses.Distinct().ToList();
+    }
+
+    private static string? GetJsonString(JsonElement item, string propertyName)
+    {
+        if (!item.TryGetProperty(propertyName, out var property))
+            return null;
+
+        return property.ValueKind == JsonValueKind.String
+            ? property.GetString()
+            : null;
     }
 }

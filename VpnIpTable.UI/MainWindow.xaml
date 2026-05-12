@@ -81,6 +81,12 @@
                         Height="30"
                         Margin="5"
                         Click="ExportRouteButton_Click"/>
+                <Button x:Name="ExportJsonButton"
+                        Content="Экспорт (JSON)"
+                        Width="120"
+                        Height="30"
+                        Margin="5"
+                        Click="ExportJsonButton_Click"/>
             </StackPanel>
         </GroupBox>
     </Grid>

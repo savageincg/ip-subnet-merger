@@ -1,6 +1,7 @@
 using Xunit;
 using VpnIpTable.Core.Services;
 using System.Net;
+using System.Text.Json;
 using VpnIpTable.Core.Models;
 
 namespace VpnIpTable.Core.Tests.Services;
@@ -119,6 +120,79 @@ public class CidrServiceTests
         Assert.Contains("route ADD", result);
         Assert.Contains("MASK", result);
         Assert.Contains("0.0.0.0", result);
+    }
+
+    [Fact]
+    public void ExportToAmneziaJson_MultipleRanges_ReturnsExpectedJsonStructure()
+    {
+        var ranges = new List<IpRange>
+        {
+            _service.ParseCidr("192.168.1.0/24"),
+            _service.ParseCidr("10.0.0.1")
+        };
+
+        var result = _service.ExportToAmneziaJson(ranges);
+        using var document = JsonDocument.Parse(result);
+        var items = document.RootElement.EnumerateArray().ToList();
+
+        Assert.Equal(2, items.Count);
+        Assert.Equal("192.168.1.0/24", items[0].GetProperty("hostname").GetString());
+        Assert.Equal("192.168.1.0/24", items[0].GetProperty("ip").GetString());
+        Assert.Equal("10.0.0.1/32", items[1].GetProperty("hostname").GetString());
+        Assert.Equal("10.0.0.1/32", items[1].GetProperty("ip").GetString());
+    }
+
+    [Fact]
+    public void ExtractAddressesFromAmneziaJson_UsesIpWhenItIsFilled()
+    {
+        var json = """
+        [
+          {
+            "hostname": "example.com",
+            "ip": "192.168.1.0/24"
+          }
+        ]
+        """;
+
+        var result = _service.ExtractAddressesFromAmneziaJson(json);
+
+        Assert.Single(result);
+        Assert.Equal("192.168.1.0/24", result[0]);
+    }
+
+    [Fact]
+    public void ExtractAddressesFromAmneziaJson_UsesHostnameWhenIpIsEmptyAndHostnameIsValid()
+    {
+        var json = """
+        [
+          {
+            "hostname": "10.0.0.1",
+            "ip": ""
+          }
+        ]
+        """;
+
+        var result = _service.ExtractAddressesFromAmneziaJson(json);
+
+        Assert.Single(result);
+        Assert.Equal("10.0.0.1", result[0]);
+    }
+
+    [Fact]
+    public void ExtractAddressesFromAmneziaJson_DoesNotFallbackToHostnameWhenIpIsFilledButInvalid()
+    {
+        var json = """
+        [
+          {
+            "hostname": "10.0.0.1",
+            "ip": "example.com"
+          }
+        ]
+        """;
+
+        var result = _service.ExtractAddressesFromAmneziaJson(json);
+
+        Assert.Empty(result);
     }
 
     [Theory]

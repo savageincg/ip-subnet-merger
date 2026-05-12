@@ -199,9 +199,9 @@ public partial class MainWindow : Window
             return "addresses.csv";
 
         if (title.Contains("JSON"))
-            return "amnezia_sites.json";
+            return "amnezia-sites.json";
 
-        return "route_commands.bat";
+        return "route-commands.bat";
     }
 
     private List<string> GetAddressesFromFileContent(string fileContent, string extension)

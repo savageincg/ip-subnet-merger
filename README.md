@@ -1,6 +1,6 @@
 # VPN IP Table Manager
 
-A .NET WPF application for managing IP addresses and subnets in CIDR notation. The application provides an intuitive interface for adding, managing, and exporting IP ranges with automatic duplicate detection and smart subnet merging.
+A .NET WPF application for managing IP addresses and subnets in CIDR notation. The application provides an intuitive interface for adding, managing, importing, and exporting IP ranges with automatic duplicate detection and smart subnet merging.
 
 ## Features
 
@@ -12,7 +12,10 @@ A .NET WPF application for managing IP addresses and subnets in CIDR notation. T
 - **Export Formats**:
   - CSV format (comma-separated single line)
   - Route commands format (multi-line Windows route ADD commands)
-- **File Import**: Load text files into the input field for batch processing
+  - Amnezia JSON format (`amnezia-sites.json`)
+- **File Import**:
+  - Load text, CSV, and JSON files into the input field for batch processing
+  - Automatically parses Amnezia-compatible `amnezia-sites.json`
 
 ## Requirements
 
@@ -81,9 +84,11 @@ dotnet test
 ### Loading from File
 
 1. Click **Load from File** button
-2. Select a text file containing IP addresses
-3. The file content will be loaded into the input field
-4. Click **Add** to extract and add addresses
+2. Select a `.txt`, `.csv`, or `.json` file containing IP addresses
+3. For text and CSV files, the application extracts valid IP addresses and CIDR ranges from the file content
+4. For `amnezia-sites.json`, the application reads addresses from the `ip` field and falls back to `hostname` when it contains a valid IP or CIDR
+5. Extracted addresses are loaded into the input field
+6. Click **Add** to extract and add addresses
 
 ### Removing Addresses
 
@@ -97,6 +102,7 @@ dotnet test
   ```
   route ADD x.x.x.x MASK y.y.y.y 0.0.0.0
   ```
+- **Export (JSON)**: Exports all addresses to Amnezia-compatible `amnezia-sites.json`, where each entry contains `hostname` and `ip`
 
 ### Data Storage
 
@@ -157,6 +163,20 @@ Some invalid data: 999.999.999.999 (will be ignored)
 route ADD 192.168.1.0 MASK 255.255.255.0 0.0.0.0
 route ADD 10.0.0.0 MASK 255.0.0.0 0.0.0.0
 route ADD 172.16.0.0 MASK 255.255.0.0 0.0.0.0
+```
+
+**Amnezia JSON Export:**
+```json
+[
+  {
+    "hostname": "192.168.1.0/24",
+    "ip": "192.168.1.0/24"
+  },
+  {
+    "hostname": "10.0.0.0/8",
+    "ip": "10.0.0.0/8"
+  }
+]
 ```
 
 ## License

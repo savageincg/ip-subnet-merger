@@ -6,56 +6,56 @@
         xmlns:local="clr-namespace:VpnIpTable.UI"
         mc:Ignorable="d"
         Title="VPN IP Table Manager" Height="600" Width="900">
-    <Grid Margin="10">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        
-        <!-- Input Section -->
-        <GroupBox Header="Ввод CIDR адресов" Grid.Row="0" Margin="0,0,0,10">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <TextBox x:Name="InputTextBox" 
+	<Grid Margin="10">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+
+		<!-- Input Section -->
+		<GroupBox Header="Ввод CIDR адресов" Grid.Row="0" Margin="0,0,0,10">
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="*"/>
+					<RowDefinition Height="Auto"/>
+				</Grid.RowDefinitions>
+				<TextBox x:Name="InputTextBox" 
                          Grid.Row="0"
                          AcceptsReturn="True"
                          TextWrapping="Wrap"
                          VerticalScrollBarVisibility="Auto"
                          Height="100"
                          Margin="5"/>
-                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button x:Name="LoadFromFileButton" 
+				<StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+					<Button x:Name="LoadFromFileButton" 
                             Content="Загрузить из файла" 
                             Width="150"
                             Height="30"
                             Margin="5"
                             Click="LoadFromFileButton_Click"/>
-                    <Button x:Name="AddButton" 
+					<Button x:Name="AddButton" 
                             Content="Добавить" 
                             Width="100"
                             Height="30"
                             Margin="5"
                             Click="AddButton_Click"/>
-                </StackPanel>
-            </Grid>
-        </GroupBox>
-        
-        <!-- List Section -->
-        <GroupBox Header="Список адресов" Grid.Row="1" Margin="0,0,0,10">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <ListBox x:Name="AddressListBox" 
+				</StackPanel>
+			</Grid>
+		</GroupBox>
+
+		<!-- List Section -->
+		<GroupBox Header="Список адресов" Grid.Row="1" Margin="0,0,0,10">
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="*"/>
+					<RowDefinition Height="Auto"/>
+				</Grid.RowDefinitions>
+				<ListBox x:Name="AddressListBox" 
                          Grid.Row="0"
                          Margin="5"
                          SelectionMode="Single"/>
-                <Button x:Name="RemoveButton" 
+				<Button x:Name="RemoveButton" 
                         Content="Удалить выбранный" 
                         Grid.Row="1"
                         HorizontalAlignment="Right"
@@ -63,31 +63,33 @@
                         Height="30"
                         Margin="5"
                         Click="RemoveButton_Click"/>
-            </Grid>
-        </GroupBox>
-        
-        <!-- Export Section -->
-        <GroupBox Header="Экспорт" Grid.Row="2">
-            <StackPanel Orientation="Horizontal">
-                <Button x:Name="ExportCsvButton" 
+				<Label Content="Количество:" HorizontalAlignment="Left" Margin="5,0,0,0" Grid.Row="1" VerticalAlignment="Center"/>
+				<Label x:Name="CountLabel" Content="0" HorizontalAlignment="Left" Margin="87,0,0,0" Grid.Row="1" VerticalAlignment="Center"/>
+			</Grid>
+		</GroupBox>
+
+		<!-- Export Section -->
+		<GroupBox Header="Экспорт" Grid.Row="2">
+			<StackPanel Orientation="Horizontal">
+				<Button x:Name="ExportCsvButton" 
                         Content="Экспорт (CSV)" 
                         Width="120"
                         Height="30"
                         Margin="5"
                         Click="ExportCsvButton_Click"/>
-                <Button x:Name="ExportRouteButton" 
+				<Button x:Name="ExportRouteButton" 
                         Content="Экспорт (Route)" 
                         Width="120"
                         Height="30"
                         Margin="5"
                         Click="ExportRouteButton_Click"/>
-                <Button x:Name="ExportJsonButton"
+				<Button x:Name="ExportJsonButton"
                         Content="Экспорт (JSON)"
                         Width="120"
                         Height="30"
                         Margin="5"
                         Click="ExportJsonButton_Click"/>
-            </StackPanel>
-        </GroupBox>
-    </Grid>
+			</StackPanel>
+		</GroupBox>
+	</Grid>
 </Window>

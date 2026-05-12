@@ -174,7 +174,9 @@ public partial class MainWindow : Window
 
     private void UpdateListBox()
     {
-        AddressListBox.ItemsSource = _ranges.Select(r => r.ToString()).OrderBy(s => s).ToList();
+        var list = _ranges.Select(r => r.ToString()).OrderBy(s => s).ToList();
+        AddressListBox.ItemsSource = list;
+        CountLabel.Content = list.Count;
     }
 
     private void ShowExportDialog(string content, string title, string filter)

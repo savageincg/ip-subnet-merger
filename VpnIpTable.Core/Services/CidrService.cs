@@ -136,7 +136,7 @@ public class CidrService
             return new
             {
                 hostname = cidr,
-                ip = cidr
+                ip = ""
             };
         });
 

@@ -1,13 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.31903.59
+# Visual Studio Version 18
+VisualStudioVersion = 18.5.11723.231 stable
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VpnIpTable.Core", "VpnIpTable.Core\VpnIpTable.Core.csproj", "{094640E9-B2DE-4591-B3CF-4F37B7D7E49C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VpnIpTable.Core.Tests", "VpnIpTable.Core.Tests\VpnIpTable.Core.Tests.csproj", "{5CE6A5E5-7EB6-419B-9845-69003A81D78C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VpnIpTable.UI", "VpnIpTable.UI\VpnIpTable.UI.csproj", "{7F9865B6-8EC7-4577-A0E8-ACA2A2E0C411}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BE94E761-9403-4838-AB5F-FED681732874}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -58,5 +63,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D72D2BEC-FB93-4E65-AA4F-0EC4F8A6B188}
 	EndGlobalSection
 EndGlobal

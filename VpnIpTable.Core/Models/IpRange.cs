@@ -7,8 +7,8 @@ namespace VpnIpTable.Core.Models;
 /// </summary>
 public class IpRange
 {
-    public IPAddress Address { get; set; }
-    public int PrefixLength { get; set; }
+    public IPAddress Address { get; }
+    public int PrefixLength { get; }
 
     public IpRange(IPAddress address, int prefixLength)
     {
@@ -60,5 +60,30 @@ public class IpRange
         }
         
         return new IPAddress(networkBytes);
+    }
+
+    protected bool Equals(IpRange other)
+    {
+        return Address.Equals(other.Address) && PrefixLength == other.PrefixLength;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return ReferenceEquals(this, obj) || obj is IpRange other && Equals(other);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Address, PrefixLength);
+    }
+
+    public static bool operator ==(IpRange? left, IpRange? right)
+    {
+        return Equals(left, right);
+    }
+
+    public static bool operator !=(IpRange? left, IpRange? right)
+    {
+        return !Equals(left, right);
     }
 }

@@ -21,16 +21,16 @@ public class CidrService
 
         var trimmed = cidr.Trim();
         var parts = trimmed.Split('/');
-        
+
         if (parts.Length == 1)
         {
             // IP-адрес без маски - интерпретируем как /32
             if (!IPAddress.TryParse(trimmed, out var address))
                 throw new FormatException($"Invalid IP address: {trimmed}");
-            
+
             return new IpRange(address, 32);
         }
-        
+
         if (parts.Length != 2)
             throw new FormatException($"Invalid CIDR format: {cidr}. Expected format: x.x.x.x/prefix or x.x.x.x");
 
@@ -63,24 +63,29 @@ public class CidrService
                 return false;
         }
 
-        return true;
+        return subset != superset;
     }
 
     /// <summary>
     /// Умное объединение: добавляет новый диапазон и удаляет все подмножества
     /// </summary>
-    public List<IpRange> MergeRanges(List<IpRange> existingRanges, IpRange newRange)
+    public List<IpRange> MergeRanges(List<IpRange> existingRanges, IpRange newRange, 
+        out bool hasAdded, out int removedCount)
     {
         var result = new List<IpRange>(existingRanges);
+        hasAdded = false;
 
         // Удаляем все диапазоны, которые являются подмножествами нового диапазона
+        var countBefore = result.Count;
         result.RemoveAll(r => IsSubsetOf(r, newRange));
+        removedCount = countBefore - result.Count;
 
         // Добавляем новый диапазон только если он не является подмножеством существующих
-        bool isSubset = result.Any(r => IsSubsetOf(newRange, r));
+        bool isSubset = result.Any(r => IsSubsetOf(newRange, r) || newRange == r);
         if (!isSubset)
         {
             result.Add(newRange);
+            hasAdded = true;
         }
 
         return result;
@@ -89,14 +94,17 @@ public class CidrService
     /// <summary>
     /// Добавляет один или несколько CIDR-адресов в список с умным объединением
     /// </summary>
-    public List<IpRange> AddRanges(List<IpRange> existingRanges, IEnumerable<string> cidrStrings)
+    public List<IpRange> AddRanges(List<IpRange> existingRanges, IEnumerable<string> cidrStrings, out int addedCount, out int removedCount)
     {
+        addedCount = removedCount = 0;
         var currentRanges = new List<IpRange>(existingRanges);
 
         foreach (var cidrString in cidrStrings)
         {
             var range = ParseCidr(cidrString);
-            currentRanges = MergeRanges(currentRanges, range);
+            currentRanges = MergeRanges(currentRanges, range, out var hasAdded, out var removed);
+            removedCount += removed;
+            if (hasAdded) addedCount++;
         }
 
         return currentRanges;
@@ -215,7 +223,7 @@ public class CidrService
         // Regex для поиска IP-адресов (x.x.x.x) и CIDR-нотации (x.x.x.x/prefix)
         // Поддерживает как полные IP-адреса, так и CIDR-нотацию
         var pattern = @"\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(?:/\d{1,2})?\b";
-        
+
         var matches = Regex.Matches(text, pattern);
         var addresses = new List<string>();
 

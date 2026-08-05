@@ -27,7 +27,7 @@
                          VerticalScrollBarVisibility="Auto"
                          Height="100"
                          Margin="5"/>
-				<StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+				<StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Left">
 					<Button x:Name="LoadFromFileButton" 
                             Content="Загрузить из файла" 
                             Width="150"
@@ -41,6 +41,7 @@
                             Margin="5"
                             Click="AddButton_Click"/>
 				</StackPanel>
+				<Label x:Name="labelResult" Content="labelResult" HorizontalAlignment="Left" Margin="284,0,0,0" Grid.Row="1" VerticalAlignment="Center"/>
 			</Grid>
 		</GroupBox>
 

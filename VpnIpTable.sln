@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.5.11723.231 stable
+VisualStudioVersion = 18.5.11723.231
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VpnIpTable.Core", "VpnIpTable.Core\VpnIpTable.Core.csproj", "{094640E9-B2DE-4591-B3CF-4F37B7D7E49C}"
 EndProject
@@ -11,6 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VpnIpTable.UI", "VpnIpTable
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BE94E761-9403-4838-AB5F-FED681732874}"
 	ProjectSection(SolutionItems) = preProject
+		addresses.yaml = addresses.yaml
 		README.md = README.md
 	EndProjectSection
 EndProject

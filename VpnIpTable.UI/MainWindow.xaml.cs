@@ -24,16 +24,18 @@ public partial class MainWindow : Window
         _cidrService = new CidrService();
         _storageService = new YamlStorageService();
         _ranges = new List<IpRange>();
+        labelResult.Content = "";
         LoadData();
         UpdateListBox();
     }
 
     private void AddButton_Click(object sender, RoutedEventArgs e)
     {
+        labelResult.Content = "";
         var inputText = InputTextBox.Text;
         if (string.IsNullOrWhiteSpace(inputText))
         {
-            MessageBox.Show("Введите текст с CIDR адресами для добавления.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+            labelResult.Content = $"Ошибка. Введите текст с CIDR адресами для добавления.";
             return;
         }
 
@@ -42,21 +44,21 @@ public partial class MainWindow : Window
 
         if (!cidrStrings.Any())
         {
-            MessageBox.Show("В тексте не найдено валидных CIDR адресов.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+            labelResult.Content = $"Ошибка. В тексте не найдено валидных CIDR адресов.";
             return;
         }
 
         try
         {
-            _ranges = _cidrService.AddRanges(_ranges, cidrStrings);
+            _ranges = _cidrService.AddRanges(_ranges, cidrStrings, out var addedCount, out var removedCount);
             UpdateListBox();
             InputTextBox.Clear();
             SaveData();
-            MessageBox.Show($"Добавлено {cidrStrings.Count} адрес(ов).", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+            labelResult.Content = $"Успех. Обработано {cidrStrings.Count}, добавлено {addedCount}, удалено {removedCount} адрес(ов).";
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"Ошибка при добавлении адресов: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            labelResult.Content = $"Ошибка при добавлении адресов: {ex.Message}";
         }
     }
 

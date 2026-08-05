@@ -12,4 +12,9 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <Target Name="LinkAddressesYaml" AfterTargets="Build" Condition="'$(OS)' == 'Windows_NT' and Exists('$(MSBuildProjectDirectory)\..\addresses.yaml')">
+    <Delete Files="$(TargetDir)addresses.yaml" TreatErrorsAsWarnings="true" />
+    <Exec Command="cmd /c mklink /H &quot;$(TargetDir)addresses.yaml&quot; &quot;$(MSBuildProjectDirectory)\..\addresses.yaml&quot;" />
+  </Target>
+
 </Project>

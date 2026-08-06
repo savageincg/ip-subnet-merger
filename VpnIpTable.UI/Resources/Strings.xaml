@@ -1,0 +1,41 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <sys:String x:Key="WindowTitle">VPN IP Table Manager</sys:String>
+    <sys:String x:Key="LanguageLabel">Language:</sys:String>
+    <sys:String x:Key="InputGroupHeader">CIDR address input</sys:String>
+    <sys:String x:Key="LoadFromFileButton">Load from file</sys:String>
+    <sys:String x:Key="AddButton">Add</sys:String>
+    <sys:String x:Key="AddressListGroupHeader">Address list</sys:String>
+    <sys:String x:Key="RemoveButton">Remove selected</sys:String>
+    <sys:String x:Key="CountCaption">Count:</sys:String>
+    <sys:String x:Key="ExportGroupHeader">Export</sys:String>
+    <sys:String x:Key="ExportCsvButton">Export (CSV)</sys:String>
+    <sys:String x:Key="ExportRouteButton">Export (Route)</sys:String>
+    <sys:String x:Key="ExportJsonButton">Export (JSON)</sys:String>
+
+    <sys:String x:Key="DialogTitleLoadTextFromFile">Load text from file</sys:String>
+    <sys:String x:Key="DialogTitleExportCsv">Export CSV</sys:String>
+    <sys:String x:Key="DialogTitleExportRoute">Export Route commands</sys:String>
+    <sys:String x:Key="DialogTitleExportJson">Export JSON</sys:String>
+    <sys:String x:Key="DialogTitleError">Error</sys:String>
+    <sys:String x:Key="DialogTitleWarning">Warning</sys:String>
+    <sys:String x:Key="DialogTitleSuccess">Success</sys:String>
+
+    <sys:String x:Key="FilterSupportedFiles">Supported Files|*.txt;*.json;*.csv|Text Files|*.txt|JSON Files|*.json|All Files|*.*</sys:String>
+    <sys:String x:Key="FilterCsvFiles">CSV Files|*.csv|All Files|*.*</sys:String>
+    <sys:String x:Key="FilterBatFiles">Bat Files|*.bat|All Files|*.*</sys:String>
+    <sys:String x:Key="FilterJsonFiles">JSON Files|*.json|All Files|*.*</sys:String>
+
+    <sys:String x:Key="ErrorEmptyInput">Error. Enter text with CIDR addresses to add.</sys:String>
+    <sys:String x:Key="ErrorNoValidCidrs">Error. No valid CIDR addresses were found in the text.</sys:String>
+    <sys:String x:Key="AddSuccess">Success. Processed {0}, added {1}, removed {2} address(es).</sys:String>
+    <sys:String x:Key="ErrorAddingAddresses">Error adding addresses: {0}</sys:String>
+    <sys:String x:Key="ErrorLoadingFile">Error loading file: {0}</sys:String>
+    <sys:String x:Key="ErrorRemovingAddress">Error removing address: {0}</sys:String>
+    <sys:String x:Key="SelectAddressToRemove">Select an address to remove.</sys:String>
+    <sys:String x:Key="AddressListEmpty">The address list is empty.</sys:String>
+    <sys:String x:Key="ErrorAutoSave">Error during automatic save: {0}</sys:String>
+    <sys:String x:Key="ErrorLoadingData">Error loading data: {0}</sys:String>
+    <sys:String x:Key="FileSaved">File saved: {0}</sys:String>
+</ResourceDictionary>

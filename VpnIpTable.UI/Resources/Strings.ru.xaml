@@ -1,0 +1,41 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <sys:String x:Key="WindowTitle">Менеджер VPN IP-таблицы</sys:String>
+    <sys:String x:Key="LanguageLabel">Язык:</sys:String>
+    <sys:String x:Key="InputGroupHeader">Ввод CIDR-адресов</sys:String>
+    <sys:String x:Key="LoadFromFileButton">Загрузить из файла</sys:String>
+    <sys:String x:Key="AddButton">Добавить</sys:String>
+    <sys:String x:Key="AddressListGroupHeader">Список адресов</sys:String>
+    <sys:String x:Key="RemoveButton">Удалить выбранный</sys:String>
+    <sys:String x:Key="CountCaption">Количество:</sys:String>
+    <sys:String x:Key="ExportGroupHeader">Экспорт</sys:String>
+    <sys:String x:Key="ExportCsvButton">Экспорт (CSV)</sys:String>
+    <sys:String x:Key="ExportRouteButton">Экспорт (Route)</sys:String>
+    <sys:String x:Key="ExportJsonButton">Экспорт (JSON)</sys:String>
+
+    <sys:String x:Key="DialogTitleLoadTextFromFile">Загрузить текст из файла</sys:String>
+    <sys:String x:Key="DialogTitleExportCsv">Экспорт CSV</sys:String>
+    <sys:String x:Key="DialogTitleExportRoute">Экспорт Route команд</sys:String>
+    <sys:String x:Key="DialogTitleExportJson">Экспорт JSON</sys:String>
+    <sys:String x:Key="DialogTitleError">Ошибка</sys:String>
+    <sys:String x:Key="DialogTitleWarning">Предупреждение</sys:String>
+    <sys:String x:Key="DialogTitleSuccess">Успех</sys:String>
+
+    <sys:String x:Key="FilterSupportedFiles">Поддерживаемые файлы|*.txt;*.json;*.csv|Текстовые файлы|*.txt|JSON-файлы|*.json|Все файлы|*.*</sys:String>
+    <sys:String x:Key="FilterCsvFiles">CSV-файлы|*.csv|Все файлы|*.*</sys:String>
+    <sys:String x:Key="FilterBatFiles">Bat-файлы|*.bat|Все файлы|*.*</sys:String>
+    <sys:String x:Key="FilterJsonFiles">JSON-файлы|*.json|Все файлы|*.*</sys:String>
+
+    <sys:String x:Key="ErrorEmptyInput">Ошибка. Введите текст с CIDR-адресами для добавления.</sys:String>
+    <sys:String x:Key="ErrorNoValidCidrs">Ошибка. В тексте не найдено валидных CIDR-адресов.</sys:String>
+    <sys:String x:Key="AddSuccess">Успех. Обработано {0}, добавлено {1}, удалено {2} адрес(ов).</sys:String>
+    <sys:String x:Key="ErrorAddingAddresses">Ошибка при добавлении адресов: {0}</sys:String>
+    <sys:String x:Key="ErrorLoadingFile">Ошибка при загрузке файла: {0}</sys:String>
+    <sys:String x:Key="ErrorRemovingAddress">Ошибка при удалении: {0}</sys:String>
+    <sys:String x:Key="SelectAddressToRemove">Выберите адрес для удаления.</sys:String>
+    <sys:String x:Key="AddressListEmpty">Список адресов пуст.</sys:String>
+    <sys:String x:Key="ErrorAutoSave">Ошибка при автоматическом сохранении: {0}</sys:String>
+    <sys:String x:Key="ErrorLoadingData">Ошибка при загрузке данных: {0}</sys:String>
+    <sys:String x:Key="FileSaved">Файл сохранен: {0}</sys:String>
+</ResourceDictionary>

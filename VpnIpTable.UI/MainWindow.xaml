@@ -5,16 +5,25 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VpnIpTable.UI"
         mc:Ignorable="d"
-        Title="VPN IP Table Manager" Height="600" Width="900">
+        Title="{DynamicResource WindowTitle}" Height="600" Width="900">
 	<Grid Margin="10">
 		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="*"/>
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
+		<StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right" Margin="-2,0,0,-2">
+			<Label Content="{DynamicResource LanguageLabel}" VerticalAlignment="Center"/>
+			<ComboBox x:Name="LanguageComboBox" Width="120" Height="20" VerticalAlignment="Center">
+				<ComboBoxItem Content="English" Tag="en"/>
+				<ComboBoxItem Content="Русский" Tag="ru"/>
+			</ComboBox>
+		</StackPanel>
+
 		<!-- Input Section -->
-		<GroupBox Header="Ввод CIDR адресов" Grid.Row="0" Margin="0,0,0,10">
+		<GroupBox Header="{DynamicResource InputGroupHeader}" Grid.Row="1" Margin="0,0,0,10">
 			<Grid>
 				<Grid.RowDefinitions>
 					<RowDefinition Height="*"/>
@@ -29,13 +38,13 @@
                          Margin="5"/>
 				<StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Left">
 					<Button x:Name="LoadFromFileButton" 
-                            Content="Загрузить из файла" 
+                            Content="{DynamicResource LoadFromFileButton}" 
                             Width="150"
                             Height="30"
                             Margin="5"
                             Click="LoadFromFileButton_Click"/>
 					<Button x:Name="AddButton" 
-                            Content="Добавить" 
+                            Content="{DynamicResource AddButton}" 
                             Width="100"
                             Height="30"
                             Margin="5"
@@ -46,7 +55,7 @@
 		</GroupBox>
 
 		<!-- List Section -->
-		<GroupBox Header="Список адресов" Grid.Row="1" Margin="0,0,0,10">
+		<GroupBox Header="{DynamicResource AddressListGroupHeader}" Grid.Row="2" Margin="0,0,0,10">
 			<Grid>
 				<Grid.RowDefinitions>
 					<RowDefinition Height="*"/>
@@ -57,35 +66,35 @@
                          Margin="5"
                          SelectionMode="Single"/>
 				<Button x:Name="RemoveButton" 
-                        Content="Удалить выбранный" 
+                        Content="{DynamicResource RemoveButton}" 
                         Grid.Row="1"
                         HorizontalAlignment="Right"
                         Width="150"
                         Height="30"
                         Margin="5"
                         Click="RemoveButton_Click"/>
-				<Label Content="Количество:" HorizontalAlignment="Left" Margin="5,0,0,0" Grid.Row="1" VerticalAlignment="Center"/>
+				<Label Content="{DynamicResource CountCaption}" HorizontalAlignment="Left" Margin="5,0,0,0" Grid.Row="1" VerticalAlignment="Center"/>
 				<Label x:Name="CountLabel" Content="0" HorizontalAlignment="Left" Margin="87,0,0,0" Grid.Row="1" VerticalAlignment="Center"/>
 			</Grid>
 		</GroupBox>
 
 		<!-- Export Section -->
-		<GroupBox Header="Экспорт" Grid.Row="2">
+		<GroupBox Header="{DynamicResource ExportGroupHeader}" Grid.Row="3">
 			<StackPanel Orientation="Horizontal">
 				<Button x:Name="ExportCsvButton" 
-                        Content="Экспорт (CSV)" 
+                        Content="{DynamicResource ExportCsvButton}" 
                         Width="120"
                         Height="30"
                         Margin="5"
                         Click="ExportCsvButton_Click"/>
 				<Button x:Name="ExportRouteButton" 
-                        Content="Экспорт (Route)" 
+                        Content="{DynamicResource ExportRouteButton}" 
                         Width="120"
                         Height="30"
                         Margin="5"
                         Click="ExportRouteButton_Click"/>
 				<Button x:Name="ExportJsonButton"
-                        Content="Экспорт (JSON)"
+                        Content="{DynamicResource ExportJsonButton}"
                         Width="120"
                         Height="30"
                         Margin="5"

@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using Microsoft.Win32;
 using VpnIpTable.Core.Models;
 using VpnIpTable.Core.Services;
@@ -21,12 +23,25 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        ApplyLanguage("en");
         _cidrService = new CidrService();
         _storageService = new YamlStorageService();
         _ranges = new List<IpRange>();
         labelResult.Content = "";
+        LanguageComboBox.SelectedIndex = 0;
+        LanguageComboBox.SelectionChanged += LanguageComboBox_SelectionChanged;
         LoadData();
         UpdateListBox();
+    }
+
+    private void LanguageComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (LanguageComboBox.SelectedItem is ComboBoxItem selectedItem &&
+            selectedItem.Tag is string language)
+        {
+            ApplyLanguage(language);
+            labelResult.Content = "";
+        }
     }
 
     private void AddButton_Click(object sender, RoutedEventArgs e)
@@ -35,16 +50,15 @@ public partial class MainWindow : Window
         var inputText = InputTextBox.Text;
         if (string.IsNullOrWhiteSpace(inputText))
         {
-            labelResult.Content = $"Ошибка. Введите текст с CIDR адресами для добавления.";
+            labelResult.Content = Text("ErrorEmptyInput");
             return;
         }
 
-        // Извлекаем адреса из текста с помощью regex
         var cidrStrings = _cidrService.ExtractAddressesFromText(inputText);
 
         if (!cidrStrings.Any())
         {
-            labelResult.Content = $"Ошибка. В тексте не найдено валидных CIDR адресов.";
+            labelResult.Content = Text("ErrorNoValidCidrs");
             return;
         }
 
@@ -54,11 +68,11 @@ public partial class MainWindow : Window
             UpdateListBox();
             InputTextBox.Clear();
             SaveData();
-            labelResult.Content = $"Успех. Обработано {cidrStrings.Count}, добавлено {addedCount}, удалено {removedCount} адрес(ов).";
+            labelResult.Content = Text("AddSuccess", cidrStrings.Count, addedCount, removedCount);
         }
         catch (Exception ex)
         {
-            labelResult.Content = $"Ошибка при добавлении адресов: {ex.Message}";
+            labelResult.Content = Text("ErrorAddingAddresses", ex.Message);
         }
     }
 
@@ -66,8 +80,8 @@ public partial class MainWindow : Window
     {
         var openDialog = new OpenFileDialog
         {
-            Title = "Загрузить текст из файла",
-            Filter = "Supported Files|*.txt;*.json;*.csv|Text Files|*.txt|JSON Files|*.json|All Files|*.*"
+            Title = Text("DialogTitleLoadTextFromFile"),
+            Filter = Text("FilterSupportedFiles")
         };
 
         if (openDialog.ShowDialog() == true)
@@ -82,7 +96,7 @@ public partial class MainWindow : Window
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка при загрузке файла: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                ShowMessage(Text("ErrorLoadingFile", ex.Message), "DialogTitleError", MessageBoxImage.Error);
             }
         }
     }
@@ -100,12 +114,12 @@ public partial class MainWindow : Window
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка при удалении: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                ShowMessage(Text("ErrorRemovingAddress", ex.Message), "DialogTitleError", MessageBoxImage.Error);
             }
         }
         else
         {
-            MessageBox.Show("Выберите адрес для удаления.", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+            ShowMessage(Text("SelectAddressToRemove"), "DialogTitleWarning", MessageBoxImage.Warning);
         }
     }
 
@@ -113,36 +127,36 @@ public partial class MainWindow : Window
     {
         if (!_ranges.Any())
         {
-            MessageBox.Show("Список адресов пуст.", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+            ShowMessage(Text("AddressListEmpty"), "DialogTitleWarning", MessageBoxImage.Warning);
             return;
         }
 
         var csv = _cidrService.ExportToCsv(_ranges);
-        ShowExportDialog(csv, "Экспорт CSV", "CSV Files|*.csv|All Files|*.*");
+        ShowExportDialog(csv, "DialogTitleExportCsv", "FilterCsvFiles", "addresses.csv");
     }
 
     private void ExportRouteButton_Click(object sender, RoutedEventArgs e)
     {
         if (!_ranges.Any())
         {
-            MessageBox.Show("Список адресов пуст.", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+            ShowMessage(Text("AddressListEmpty"), "DialogTitleWarning", MessageBoxImage.Warning);
             return;
         }
 
         var routeCommands = _cidrService.ExportToRouteCommands(_ranges);
-        ShowExportDialog(routeCommands, "Экспорт Route команд", "Bat Files|*.bat|All Files|*.*");
+        ShowExportDialog(routeCommands, "DialogTitleExportRoute", "FilterBatFiles", "route-commands.bat");
     }
 
     private void ExportJsonButton_Click(object sender, RoutedEventArgs e)
     {
         if (!_ranges.Any())
         {
-            MessageBox.Show("Список адресов пуст.", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
+            ShowMessage(Text("AddressListEmpty"), "DialogTitleWarning", MessageBoxImage.Warning);
             return;
         }
 
         var json = _cidrService.ExportToAmneziaJson(_ranges);
-        ShowExportDialog(json, "Экспорт JSON", "JSON Files|*.json|All Files|*.*");
+        ShowExportDialog(json, "DialogTitleExportJson", "FilterJsonFiles", "amnezia-sites.json");
     }
 
     private void SaveData()
@@ -154,7 +168,7 @@ public partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"Ошибка при автоматическом сохранении: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            ShowMessage(Text("ErrorAutoSave", ex.Message), "DialogTitleError", MessageBoxImage.Error);
         }
     }
 
@@ -170,7 +184,7 @@ public partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"Ошибка при загрузке данных: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+            ShowMessage(Text("ErrorLoadingData", ex.Message), "DialogTitleError", MessageBoxImage.Warning);
         }
     }
 
@@ -181,31 +195,55 @@ public partial class MainWindow : Window
         CountLabel.Content = list.Count;
     }
 
-    private void ShowExportDialog(string content, string title, string filter)
+    private void ShowExportDialog(string content, string titleKey, string filterKey, string fileName)
     {
         var saveDialog = new SaveFileDialog
         {
-            Title = title,
-            Filter = filter,
-            FileName = GetExportFileName(title)
+            Title = Text(titleKey),
+            Filter = Text(filterKey),
+            FileName = fileName
         };
 
         if (saveDialog.ShowDialog() == true)
         {
             File.WriteAllText(saveDialog.FileName, content);
-            MessageBox.Show($"Файл сохранен: {saveDialog.FileName}", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+            ShowMessage(Text("FileSaved", saveDialog.FileName), "DialogTitleSuccess", MessageBoxImage.Information);
         }
     }
 
-    private static string GetExportFileName(string title)
+    private static void ApplyLanguage(string language)
     {
-        if (title.Contains("CSV"))
-            return "addresses.csv";
+        var culture = CultureInfo.GetCultureInfo(language == "ru" ? "ru-RU" : "en-US");
+        CultureInfo.CurrentCulture = culture;
+        CultureInfo.CurrentUICulture = culture;
 
-        if (title.Contains("JSON"))
-            return "amnezia-sites.json";
+        var dictionaries = Application.Current.Resources.MergedDictionaries;
+        var currentDictionary = dictionaries.FirstOrDefault(dictionary =>
+            dictionary.Source?.OriginalString.StartsWith("Resources/Strings", StringComparison.OrdinalIgnoreCase) == true);
 
-        return "route-commands.bat";
+        if (currentDictionary is not null)
+        {
+            dictionaries.Remove(currentDictionary);
+        }
+
+        var suffix = language == "ru" ? ".ru" : "";
+        dictionaries.Add(new ResourceDictionary
+        {
+            Source = new Uri($"Resources/Strings{suffix}.xaml", UriKind.Relative)
+        });
+    }
+
+    private static string Text(string key, params object[] args)
+    {
+        var template = Application.Current.TryFindResource(key) as string ?? key;
+        return args.Length == 0
+            ? template
+            : string.Format(CultureInfo.CurrentCulture, template, args);
+    }
+
+    private static void ShowMessage(string message, string titleKey, MessageBoxImage image)
+    {
+        MessageBox.Show(message, Text(titleKey), MessageBoxButton.OK, image);
     }
 
     private List<string> GetAddressesFromFileContent(string fileContent, string extension)

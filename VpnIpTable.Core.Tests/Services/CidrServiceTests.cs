@@ -83,9 +83,11 @@ public class CidrServiceTests
 
         var newRange = _service.ParseCidr("192.168.0.0/16");
 
-        var result = _service.MergeRanges(existing, newRange);
+        var result = _service.MergeRanges(existing, newRange, out var hasAdded, out var removed);
 
         // Новый диапазон должен быть добавлен, старые должны быть удалены
+        Assert.True(hasAdded);
+        Assert.Equal(2, removed);
         Assert.Contains(result, r => r.ToString() == "192.168.0.0/16");
         Assert.DoesNotContain(result, r => r.ToString() == "192.168.1.0/24");
         Assert.DoesNotContain(result, r => r.ToString() == "192.168.2.0/24");
@@ -137,9 +139,9 @@ public class CidrServiceTests
 
         Assert.Equal(2, items.Count);
         Assert.Equal("192.168.1.0/24", items[0].GetProperty("hostname").GetString());
-        Assert.Equal("192.168.1.0/24", items[0].GetProperty("ip").GetString());
+        Assert.Equal("", items[0].GetProperty("ip").GetString());
         Assert.Equal("10.0.0.1/32", items[1].GetProperty("hostname").GetString());
-        Assert.Equal("10.0.0.1/32", items[1].GetProperty("ip").GetString());
+        Assert.Equal("", items[1].GetProperty("ip").GetString());
     }
 
     [Fact]
